@@ -1,0 +1,68 @@
+buildscript {
+    repositories {
+        mavenCentral()
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.10.1'
+		classpath 'org.robolectric.gradle:gradle-android-test-plugin:0.10.0'
+    }
+}
+
+allprojects {
+	repositories {
+		mavenCentral()
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	}
+}
+
+apply plugin: 'android'
+apply plugin: 'android-test'
+
+dependencies {
+	compile 'com.android.support:appcompat-v7:19.+'
+	compile 'org.robolectric:robolectric:2.3'
+	compile 'junit:junit:4.+'
+
+	compile 'org.mockito:mockito-core:1.9.+'
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.3"
+	
+	defaultConfig {
+		minSdkVersion 8
+		targetSdkVersion 19
+		versionCode 1
+		versionName "1.0"
+	}
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+			
+        }
+		androidTest.setRoot('src/test')
+
+        // Move the build types to build-types/<type>
+        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
+        // This moves them out of them default location under src/<type>/... which would
+        // conflict with src/ being used by the main source set.
+        // Adding new build types or product flavors should be accompanied
+        // by a similar customization.
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+}
+
+androidTest {
+	include '**/*Test.class'
+	maxHeapSize = "2048m"
+}
